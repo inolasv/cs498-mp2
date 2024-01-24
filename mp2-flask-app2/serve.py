@@ -3,24 +3,17 @@ import subprocess
 import socket
 app = Flask(__name__)
 
-# @app.route('/')
-# def hello_world():
-#    return 'Hello World'
-
-
-
-seed = 0
-
 @app.route('/',methods = ['POST', 'GET'])
-def seeds():
-   global seed
+def serve():
    if request.method == 'POST':
-        p = subprocess.Popen(["python", "stress_cpu.py"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-        stdout, stderr = p.communicate()
+      subprocess.Popen(["python3", "stress_cpu.py"])
+      hostname = socket.gethostname()
+      return f"stressing {socket.gethostbyname(hostname)}"
    else:
-      return socket.gethostname()
+      hostname = socket.gethostname()
+      return socket.gethostbyname(hostname)
       
 
 
 if __name__ == '__main__':
-   app.run(port="0.0.0.0")
+   app.run(host="0.0.0.0", port=5000)
